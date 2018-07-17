@@ -1,0 +1,23 @@
+{
+  "name": "static-server",
+  "version": "0.0.1",
+  "description": "provide static file transport service",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Timuer/static-server.git"
+  },
+  "author": "timuer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Timuer/static-server/issues"
+  },
+  "homepage": "https://github.com/Timuer/static-server#readme",
+  "dependencies": {
+    "ejs": "^2.6.1"
+  }
+}

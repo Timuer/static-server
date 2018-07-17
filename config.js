@@ -1,5 +1,5 @@
 module.exports = {
-    root: `${__dirname}\\static`,
+    root: `${__dirname}`,
     port: 2000,
     host: 'localhost',
 }
