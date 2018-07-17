@@ -1,7 +1,7 @@
 const http = require('http')
 const config = require('./config')
 const path = require('path')
-const {processPath} = require('./helper')
+const processPath = require('./helper/processPath')
 
 
 let server = http.createServer((req, res) => {

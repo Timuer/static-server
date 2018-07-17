@@ -1,15 +1,17 @@
 const fs = require('fs')
 const {promisify} = require('util')
 const ejs = require('ejs')
+const config = require('../config')
 const {relative} = require('path')
-const config = require('./config')
+const mimetypes = require('./mimetypes')
+const compress = require('./compress')
 
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
 
 let str = fs.readFileSync('index.ejs', 'utf8')
 
-module.exports.processPath = async function(req, res, path) {
+module.exports = async function(req, res, path) {
     if (!fs.existsSync(path)) {
         res.statusCode = 404
         res.setHeader('content-type', 'text/plain')
@@ -20,8 +22,9 @@ module.exports.processPath = async function(req, res, path) {
     try {
         if (status.isFile()) {
             res.statusCode = 200
-            res.setHeader('content-type', 'text/plain')
+            res.setHeader('content-type', mimetypes(path))
             let rs = fs.createReadStream(path)
+            rs = compress(req, res, rs)
             rs.pipe(res)
         } else if (status.isDirectory()) {
             let files = await readdir(path)
@@ -42,3 +45,5 @@ module.exports.processPath = async function(req, res, path) {
         console.error(ex)
     }
 }
+
+
