@@ -8,7 +8,6 @@ module.exports = function(req, res, streamToCompress) {
     }
     let keys = Object.keys(zips)
     for (let k of keys) {
-        console.info(k)
         if (ac && ac.indexOf(k) !== -1) {
             res.setHeader('Content-Encoding', k)
             return zips[k]()

@@ -24,7 +24,9 @@ module.exports = async function(req, res, path) {
             res.statusCode = 200
             res.setHeader('content-type', mimetypes(path))
             let rs = fs.createReadStream(path)
-            rs = compress(req, res, rs)
+            if (path.match(config.compress)[1]) {
+                rs = compress(req, res, rs)
+            }
             rs.pipe(res)
         } else if (status.isDirectory()) {
             let files = await readdir(path)
