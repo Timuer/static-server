@@ -6,6 +6,7 @@ const {relative} = require('path')
 const mimetypes = require('./mimetypes')
 const compress = require('./compress')
 const range = require('./range')
+const cache = require('./cache')
 
 const stat = promisify(fs.stat)
 const readdir = promisify(fs.readdir)
@@ -33,13 +34,19 @@ let retFile = function(req, res, path, status) {
 let retDirList = function(req, res, path, files) {
     let result = ejs.render(str, {
         title: 'Static browser',
-        base: relative(config.root, path),
+        base: relative(config.root, path).replace('\\', '/'),
         lst: files
     })
     res.statusCode = 200
     res.setHeader('content-type', 'text/html')
     res.write(result)
     res.end()
+}
+
+let retCache = function(res) {
+    res.statusCode = 304
+    res.end()
+    return
 }
 
 let retError = function(req, res) {
@@ -58,7 +65,11 @@ module.exports = async function(req, res, path) {
     let status = await stat(path)
     try {
         if (status.isFile()) {
-            retFile(req, res, path, status)
+            if (cache.isFresh(req, res, status)) {
+                retCache(res)
+            } else {
+                retFile(req, res, path, status)
+            }
         } else if (status.isDirectory()) {
             let files = await readdir(path)
             retDirList(req, res, path, files)

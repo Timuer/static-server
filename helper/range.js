@@ -3,7 +3,6 @@ module.exports = function(totalSize, req, res) {
     if (!range) {
         return {code: 200}
     }
-    log('has range')
     let groups = range.match(/bytes=(\d*)-(\d*)/)
     let start = groups[1] || 0
     let end = groups[2] || totalSize - 1
